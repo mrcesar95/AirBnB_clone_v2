@@ -82,8 +82,8 @@ class HBNBCommand(cmd.Cmd):
                 if pline:
                     # check for *args or **kwargs
                     if (
-                        pline[0] is "{"
-                        and pline[-1] is "}"
+                        pline[0] == "{"
+                        and pline[-1] == "}"
                         and type(eval(pline)) is dict
                     ):
                         _args = pline
@@ -126,40 +126,48 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        newArgs = args.split(" ")
-        create_class = newArgs.pop(0)
-        if not create_class:
+        promptline = args.split()
+        _cls = promptline[0]
+        values = []
+        names = []
+        if not _cls:
             print("** class name missing **")
             return
-        elif create_class not in HBNBCommand.classes:
+        elif _cls not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        newValue = self.create_dict(newArgs)
-        new_instance = HBNBCommand.classes[create_class]()
-        new_instance.__dict__.update(newValue)
-        storage.save()
-        print(new_instance.id)
+        for i in range(1, len(promptline)):
+            tupl = promptline[i].partition('=')
+            names.append(tupl[0])
+            try:
+                if tupl[2][0] == '\"' and tupl[2][-1] == '\"':
+                    value = tupl[2].replace('\"', '')
+                    value = value.replace('_', ' ')
+                    values.append(value)
+                else:
+                    value = tupl[2]
+                    if '.' in value or type(value) is float:
+                        try:
+                            value = float(value)
+                            values.append(value)
+                        except Exception:
+                            pass
+                    else:
+                        try:
+                            value = int(value)
+                            values.append(value)
+                        except Exception:
+                            pass
+            except IndexError:
+                continue
 
-    def create_dict(self, args):
-        """ CREANDO UN DICCIONARIO PARA LOS ATRIBUTOS DE CLASES"""
-        new_dict = {}
-        for j in args:
-            lista = j.split("=")
-            if len(lista) == 2:
-                value = lista[1].partition(".")
-                if '"' in lista[1]:
-                    new_dict[lista[0]] = (
-                        lista[1].replace('\\"', '"')
-                        .replace('"', "").replace("_", " ")
-                    )
-                elif lista[1].isdigit():
-                    new_dict[lista[0]] = int(lista[1])
-                elif value:
-                    if value[0].isdigit()\
-                        and value[2].isdigit()\
-                            and value[1] == ".":
-                        new_dict[lista[0]] = float(lista[1])
-        return new_dict
+        dictionary = dict(zip(names, values))
+
+        new_instance = HBNBCommand.classes[_cls]()
+        new_instance.__dict__.update(dictionary)
+        new_instance.save()
+        print(new_instance.id)
+    
 
     def help_create(self):
         """ Help information for the create method """
@@ -307,7 +315,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '"':  # check for quoted arg
+            if args and args[0] == '"':  # check for quoted arg
                 second_quote = args.find('"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
@@ -315,10 +323,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(" ")
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not " ":
+            if not att_name and args[0] != " ":
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '"':
+            if args[2] and args[2][0] == '"':
                 att_val = args[2][1: args[2].find('"', 1)]
 
             # if att_val was not quoted arg
