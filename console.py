@@ -167,7 +167,6 @@ class HBNBCommand(cmd.Cmd):
         new_instance.__dict__.update(dictionary)
         new_instance.save()
         print(new_instance.id)
-    
 
     def help_create(self):
         """ Help information for the create method """
@@ -327,7 +326,7 @@ class HBNBCommand(cmd.Cmd):
                 att_name = args[0]
             # check for quoted val arg
             if args[2] and args[2][0] == '"':
-                att_val = args[2][1: args[2].find('"', 1)]
+                att_val = args[2][1:args[2].find('"', 1)]
 
             # if att_val was not quoted arg
             if not att_val and args[2]:
