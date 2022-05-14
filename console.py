@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
                 if '"' in lista[1]:
                     new_dict[lista[0]] = (
                         lista[1].replace('\\"', '"')
-                        replace('"', "").replace("_", " ")
+                        .replace('"', "").replace("_", " ")
                     )
                 elif lista[1].isdigit():
                     new_dict[lista[0]] = int(lista[1])
