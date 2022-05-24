@@ -32,13 +32,15 @@ def show_pythontext(text='is cool'):
 @app.route('/number/<int:n>', strict_slashes=False)
 def show_integern(n):
     """display n only if n is an integer"""
-    return '{} is a number'.format(n)
+    if type(n) is int:
+        return "{} is a number".format(n)
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
 def render_templaten(n):
     """routes with a template that shows the integer n"""
-    return render_template('5-number.html', n=n)
+    if type(n) is int:
+        return render_template('5-number_template.html', n=n)
 
 
 if __name__ == '__main__':
