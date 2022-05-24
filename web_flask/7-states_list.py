@@ -16,7 +16,7 @@ def teardown_db(self):
 def show_states_list():
     """States list"""
     states = storage.all(State).values()
-    return(render_template('7-states_list.html', states=states))
+    return render_template('7-states_list.html', states=states)
 
 
 if __name__ == '__main__':
