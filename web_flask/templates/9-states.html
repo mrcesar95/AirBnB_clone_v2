@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<HTML lang="en">
-    <HEAD>
-        <TITLE>HBNB</TITLE>
-    </HEAD>
-    <BODY>
-    {% if states is defined %}
-        <H1>States</H1>
-        <UL>
-        {% for my_state in states.values()|sort(attribute="name") %}
-            <LI>{{ my_state.id }}: <B>{{ my_state.name }}</B></LI>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBNB</title>
+</head>
+<body>
+    {% if variable %}
+    <h1>States</h1>
+    <ul>
+        {% for state in states|sort(attribute="name") %}
+        <LI>{{ state.id }}: <B>{{ state.name }}</B></LI>
         {% endfor %}
-        </UL>
-    {% elif state is defined %}
-        <H1>State: {{ state.name }}</H1>
-        <H3>Cities:</H3>
-        <UL>
-            {% for city in state.cities|sort(attribute="name") %}
-                    <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
-            {% endfor %}
-            </UL>
+    </ul>
+    {% elif states %}
+    <h1>State: {{ state.name }}</h1>
+    <h3>Cities:</h3>
+    <ul>
+        {% for city in states.cities|sort(attribute="name") %}
+        <li>{{ city.id }}: <b>{{ city.name }}</b></li>
+        {% endfor %}
+    </ul>
     {% else %}
-        <H1>Not found!</H1>
+    <h1>Not found!</h1>
     {% endif %}
-    </BODY>
-</HTML>
+</body>
+</html>
